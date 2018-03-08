@@ -1,0 +1,44 @@
+imports:
+  - path: cluster.py
+  - path: nodeport.py
+# ============================================================================================================ 
+#                                       ENVIRONMENT SPECIFIC OVERRIDES:
+# ============================================================================================================ 
+# In here we put environment-specific properties that may not be the same across all 
+# environments. Shared, dynamic configurations/properties are configured in the main.py file
+#
+# Limited this file to only one resource-entry, containing settings for all resources to keep the it simple.  
+# ============================================================================================================      
+ 
+resources:
+  - name: cluster
+    type: cluster.py
+ 
+    properties:
+      region: europe-west1
+      zone: europe-west1-b
+      # nodepool machine-types:
+      machine_type_standard: "n1-standard-2"   
+      machine_type_high_memory: "n1-highmem-2"
+      machine_type_high_cpu: "n1-highcpu-4"
+ 
+      # vm settings 
+      machine_disk_size: 50
+ 
+      # cluster settings       
+      initial_cluster_version: "1.8.7-gke.1"
+      initial_node_count: 3
+ 
+      # db instance tier (note: deployment manager doesn't allow updating the tier):
+      database_tier: "db-n1-standard-2"
+  - name: nodeport
+    type: nodeport.py
+
+    properties:
+      name: $(ref.cluster.output-to-pass)
+      image: gcr.io/dev/nginx-varungb:latest
+      port: 341
+      nodeport: 32702
+    metadata:
+      dependsOn:
+      - cluster

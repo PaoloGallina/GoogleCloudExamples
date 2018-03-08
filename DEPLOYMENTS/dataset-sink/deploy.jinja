@@ -1,0 +1,19 @@
+resources:
+
+- name: bq-dataset-meta5
+  type: bigquery.v2.dataset 
+  properties:
+    location: US
+    datasetReference:
+      datasetId: meta5
+
+- name: log-sink-meta5  
+  type: logging.v2.sink
+  properties:
+    sink: meta-logs-to-bigquery
+    destination: bigquery.googleapis.com/projects/gallo-cedrone/datasets/meta5
+    filter: 'resource.type="gce_instance" jsonPayload.path:*'
+    uniqueWriterIdentity: false
+  metadata:
+    dependsOn: 
+    - bq-dataset-meta5    

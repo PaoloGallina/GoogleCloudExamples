@@ -1,0 +1,16 @@
+imports:
+- path: template.py
+- path: template2.py
+  
+
+resources:
+- name: vm-1
+  type: template.py
+- name: a-new-network
+  type: compute.v1.network
+  properties:
+    IPv4Range: 10.0.0.1/16
+- name: ciao
+  type: template2.py
+  properties:
+    debug: $(ref.vm-1.paolo)
