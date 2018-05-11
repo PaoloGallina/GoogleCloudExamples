@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.7.9
+    volumeMounts:
+    - mountPath: /etc/disk
+      name: disk
+    securityContext:
+      allowPrivilegeEscalation: true
+  volumes:
+  - gcePersistentDisk:
+      fsType: ext4
+      pdName: gke-disk
+    name: disk
