@@ -1,0 +1,30 @@
+resources:
+- name: pallino
+  type: iam.v1.serviceAccount
+  properties:
+    accountId: pallino
+    displayName:  pallino
+
+- name: get-iam-policy
+  action: gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.getIamPolicy
+  properties:
+    resource: gallo-cedrone
+  metadata:
+    runtimePolicy:
+    - 'UPDATE_ALWAYS'
+
+- name: set-iam-policy
+  action: gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy
+  metadata:
+    runtimePolicy:
+    - 'UPDATE_ALWAYS'
+  properties:
+    resource: gallo-cedrone
+    policy: $(ref.get-iam-policy)
+    gcpIamPolicyPatch:
+      add:
+{% for role in properties['assignedRoles'] %}
+      - role: {{ role }}
+        members:
+        - serviceAccount:$(ref.pallino.email)
+{% endfor %}
