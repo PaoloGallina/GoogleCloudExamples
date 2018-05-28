@@ -1,0 +1,15 @@
+imports:
+  - path: sa.jinja
+
+resources:
+  - name: dev-opseng-serviceaccount
+    type: sa.jinja
+    properties:
+      assignedRoles:
+        - roles/cloudtrace.agent
+        - roles/logging.logWriter
+        - roles/monitoring.metricWriter
+        - roles/storage.admin
+        - roles/deploymentmanager.editor
+        - roles/container.admin
+        - roles/datastore.owner
